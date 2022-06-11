@@ -47,4 +47,14 @@ contract Trasaction {
     function getUser(address _address) public view returns (userObject memory) {
         return userMap[_address];
     }
+
+    //send payment 
+    function sendTRX(address _receiver, uint256 _amount) public{
+        _receiver.transfer(_amount)
+    }
+
+    //get transactions
+    function getTransactions() public view returns(transactionObject[] memory){
+        return transactionsList;
+    }
 }
