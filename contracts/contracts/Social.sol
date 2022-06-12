@@ -49,7 +49,7 @@ contract Trasaction {
     }
 
     //send payment 
-    function sendTRX(address _receiver, uint256 _amount) public{
+    function sendTRX(address _receiver, uint256 _amount) public  payable{
         _receiver.transfer(_amount)
     }
 
