@@ -13,7 +13,7 @@ contract Trasaction {
     //transaction object
     struct transactionObject {
         address senderAddress;
-        string ReceiverAddress;
+        address ReceiverAddress;
         uint256 Amount;
         string note;
     }
@@ -23,8 +23,9 @@ contract Trasaction {
 
     //transactions
     transactionObject[] public transactionsList;
-     // adding user on connection with twitter
-    function addUser (
+
+    // adding user on connection with twitter
+    function addUser(
         address _address,
         string memory _user,
         string memory _handle
@@ -35,26 +36,34 @@ contract Trasaction {
     //adding txn
     function addTxn(
         address _senderAddress,
-        string _ReceiverAddress,
+        address _ReceiverAddress,
         uint256 _Amount,
-        string _note
-    ) public{
-        transactionsList.push(transactionObject(_senderAddress, _ReceiverAddress, _Amount, _note));
+        string memory _note
+    ) public {
+        transactionsList.push(
+            transactionObject(_senderAddress, _ReceiverAddress, _Amount, _note)
+        );
     }
-
 
     // get a particular user on login
     function getUser(address _address) public view returns (userObject memory) {
         return userMap[_address];
     }
 
-    //send payment 
-    function sendTRX(address _receiver, uint256 _amount) public  payable{
-        _receiver.transfer(_amount)
+    //send payment
+    function sendTRX(address payable _receiver, uint256 _amount)
+        public
+        payable
+    {
+        _receiver.transfer(_amount);
     }
 
     //get transactions
-    function getTransactions() public view returns(transactionObject[] memory){
+    function getTransactions()
+        public
+        view
+        returns (transactionObject[] memory)
+    {
         return transactionsList;
     }
 }
