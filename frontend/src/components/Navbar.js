@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "./Button";
 import { AiOutlineWallet } from "react-icons/ai";
 import { useWalletValue } from "../providers/WalletProvider";
 
 function Navbar() {
-  const { connectWallet } = useWalletValue();
+  const { connectWallet, isConnected, detectWallet, wallet } = useWalletValue();
+  useEffect(() => {
+    detectWallet();
+  }, [detectWallet]);
   return (
     <div
       className={
@@ -12,10 +15,16 @@ function Navbar() {
       }
     >
       <a href="/"> TRONPAY</a>
-      <Button onClick={connectWallet}>
-        <span>Connect</span>
-        <AiOutlineWallet />
-      </Button>
+      {!isConnected ? (
+        <Button onClick={connectWallet}>
+          <span>Connect</span>
+          <AiOutlineWallet />
+        </Button>
+      ) : (
+        <div className="text-lg">{`${wallet.slice(0, 5)}...${wallet.slice(
+          -4
+        )}`}</div>
+      )}
     </div>
   );
 }

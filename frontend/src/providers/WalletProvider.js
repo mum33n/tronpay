@@ -8,9 +8,18 @@ import React, {
 const walletProviderContext = createContext();
 function WalletProvider({ children }) {
   const [wallet, setWallet] = useState();
+  const [isConnected, setConnection] = useState(false);
 
   const tronWeb = window.tronWeb;
-  const tronLink = window.tronLink;
+  const tronLink = window?.tronLink;
+  const defaultAddress = tronWeb?.defaultAddress.base58;
+
+  const detectWallet = useCallback(async () => {
+    if (tronLink?.ready) {
+      setConnection(true);
+      setWallet(defaultAddress);
+    }
+  }, [tronLink?.ready, defaultAddress]);
 
   const connectWallet = useCallback(async () => {
     if (tronWeb) {
@@ -23,15 +32,16 @@ function WalletProvider({ children }) {
           },
         ],
       });
-      setWallet(tronWeb.defaultAddress.base58);
+      setConnection(true);
+      setWallet(defaultAddress);
     } else {
       alert("Tronlink is Not installed");
     }
-  }, [tronWeb]);
+  }, [tronWeb, defaultAddress]);
 
   const values = useMemo(() => {
-    return { wallet, connectWallet };
-  }, [connectWallet, wallet]);
+    return { wallet, connectWallet, detectWallet, isConnected };
+  }, [connectWallet, wallet, detectWallet, isConnected]);
 
   return (
     <walletProviderContext.Provider value={values}>
