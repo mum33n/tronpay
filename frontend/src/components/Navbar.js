@@ -9,7 +9,7 @@ function Navbar() {
         "bg-slate-900 items-center py-5 flex justify-between px-10 text-white"
       }
     >
-      <a href="#"> TRONPAY</a>
+      <a href="/"> TRONPAY</a>
       <Button>
         <span>Connect</span>
         <AiOutlineWallet />
