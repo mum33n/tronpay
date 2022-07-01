@@ -21,9 +21,7 @@ function Navbar() {
           <AiOutlineWallet />
         </Button>
       ) : (
-        <div className="text-lg">{`${wallet.slice(0, 5)}...${wallet.slice(
-          -4
-        )}`}</div>
+        <div className="text-lg">{`${wallet}`}</div>
       )}
     </div>
   );
