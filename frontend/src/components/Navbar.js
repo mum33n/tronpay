@@ -1,8 +1,10 @@
 import React from "react";
 import Button from "./Button";
 import { AiOutlineWallet } from "react-icons/ai";
+import { useWalletValue } from "../providers/WalletProvider";
 
 function Navbar() {
+  const { connectWallet } = useWalletValue();
   return (
     <div
       className={
@@ -10,7 +12,7 @@ function Navbar() {
       }
     >
       <a href="/"> TRONPAY</a>
-      <Button>
+      <Button onClick={connectWallet}>
         <span>Connect</span>
         <AiOutlineWallet />
       </Button>
