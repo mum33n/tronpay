@@ -22,11 +22,6 @@ function WalletProvider({ children }) {
     if (window.tronWeb) {
       await window.tronWeb.request({
         method: "tron_requestAccounts",
-        params: [
-          {
-            eth_accounts: {},
-          },
-        ],
       });
       setConnection(true);
       setWallet(window.tronWeb.defaultAddress.base58);
