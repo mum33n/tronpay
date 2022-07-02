@@ -11,7 +11,7 @@ function AppContainer() {
   return (
     <div>
       <Navbar />
-      <div className="mt-10">
+      <div className="mt-5 md:mt-10 pb-10">
         <Outlet />
       </div>
     </div>
