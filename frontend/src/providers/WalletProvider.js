@@ -10,21 +10,17 @@ function WalletProvider({ children }) {
   const [wallet, setWallet] = useState();
   const [isConnected, setConnection] = useState(false);
 
-  const tronWeb = window.tronWeb;
-  const tronLink = window?.tronLink;
-  const defaultAddress = tronWeb?.defaultAddress.base58;
-
   const detectWallet = useCallback(async () => {
-    if (tronLink?.ready) {
+    console.log(window.tronWeb.ready);
+    if (window.tronLink?.ready) {
       setConnection(true);
-      setWallet(defaultAddress);
+      setWallet(window.tronWeb.defaultAddress.base58);
     }
-  }, [tronLink?.ready, defaultAddress]);
+  }, []);
 
   const connectWallet = useCallback(async () => {
-    if (tronWeb) {
-      alert("Tronlink Found");
-      await tronWeb.request({
+    if (window.tronWeb) {
+      await window.tronWeb.request({
         method: "tron_requestAccounts",
         params: [
           {
@@ -33,11 +29,11 @@ function WalletProvider({ children }) {
         ],
       });
       setConnection(true);
-      setWallet(defaultAddress);
+      setWallet(window.tronWeb.defaultAddress.base58);
     } else {
       alert("Tronlink is Not installed");
     }
-  }, [tronWeb, defaultAddress]);
+  }, []);
 
   const values = useMemo(() => {
     return { wallet, connectWallet, detectWallet, isConnected };
