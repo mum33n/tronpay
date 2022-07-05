@@ -6,12 +6,17 @@ import { useWalletValue } from "../providers/WalletProvider";
 function AppContainer() {
   const { detectWallet } = useWalletValue();
   useEffect(() => {
-    detectWallet();
+    window.addEventListener("load", () => {
+      detectWallet();
+    });
+    return window.removeEventListener("load", () => {
+      detectWallet();
+    });
   }, [detectWallet]);
   return (
     <div>
       <Navbar />
-      <div className="mt-5 md:mt-10 pb-10">
+      <div className="pb-10">
         <Outlet />
       </div>
     </div>

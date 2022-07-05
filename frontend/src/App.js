@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import AppContainer from "./pages/AppContainer";
 import WalletProvider from "./providers/WalletProvider";
 import PaymentPage from "./pages/PaymentPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
           <Route element={<AppContainer />}>
             <Route path="/" element={<div>Hello</div>} />
             <Route path="/pay" element={<PaymentPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
           </Route>
         </Routes>
       </div>

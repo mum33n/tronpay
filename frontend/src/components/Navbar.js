@@ -15,16 +15,20 @@ function Navbar() {
       }
     >
       <a href="/"> TRONPAY</a>
-      {!isConnected ? (
-        <Button onClick={connectWallet}>
-          <span>Connect</span>
-          <AiOutlineWallet />
-        </Button>
-      ) : (
-        <div className="text-lg">
-          {wallet ? `${wallet?.slice(0, 5)}...${wallet?.slice(-4)}` : ""}
-        </div>
-      )}
+      <div className="flex items-center gap-3">
+        <a href="/pay">Payment</a>
+        <a href="/profile">Profile</a>
+        {!isConnected ? (
+          <Button onClick={connectWallet}>
+            <span>Connect</span>
+            <AiOutlineWallet />
+          </Button>
+        ) : (
+          <div className="text-lg">
+            {wallet ? `${wallet?.slice(0, 5)}...${wallet?.slice(-4)}` : ""}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

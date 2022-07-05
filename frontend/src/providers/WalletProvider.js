@@ -11,7 +11,7 @@ function WalletProvider({ children }) {
   const [isConnected, setConnection] = useState(false);
 
   const detectWallet = useCallback(async () => {
-    console.log(window.tronWeb.ready);
+    console.log(window.tronLink.request);
     if (window.tronLink?.ready) {
       setConnection(true);
       setWallet(window.tronWeb.defaultAddress.base58);
