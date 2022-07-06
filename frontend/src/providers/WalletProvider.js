@@ -11,20 +11,31 @@ function WalletProvider({ children }) {
   const [isConnected, setConnection] = useState(false);
 
   const detectWallet = useCallback(async () => {
-    console.log(window.tronLink.request);
     if (window.tronLink?.ready) {
       setConnection(true);
       setWallet(window.tronWeb.defaultAddress.base58);
     }
   }, []);
 
-  const connectWallet = useCallback(async () => {
+  const connectWallet = useCallback(async (loading) => {
     if (window.tronWeb) {
-      await window.tronWeb.request({
-        method: "tron_requestAccounts",
-      });
-      setConnection(true);
-      setWallet(window.tronWeb.defaultAddress.base58);
+      loading(true);
+      try {
+        let account = await window.tronWeb.request({
+          method: "tron_requestAccounts",
+        });
+        if (account.code === 200) {
+          setConnection(true);
+          setWallet(window.tronWeb.defaultAddress.base58);
+          loading(false);
+        } else {
+          let err = { error: "rejected by the user" };
+          throw err;
+        }
+      } catch (err) {
+        alert("Rejected by the user");
+        loading(false);
+      }
     } else {
       alert("Tronlink is Not installed");
     }
