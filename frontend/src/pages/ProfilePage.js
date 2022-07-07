@@ -19,23 +19,35 @@ function ProfilePage() {
     });
     return param;
   }, [token]);
-
-  // let headers = {
-  //   "Content-Type": "application/x-www-form-urlencoded",
-  // };
   const data1 = useMemo(() => data(), [data]);
-  console.log(data1);
-  useEffect(() => {
-    axios
+  const getToken = useCallback(async () => {
+    let data = await axios
       .post("https://discord.com/api/oauth2/token", data1, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       })
-      .then((res) => {
-        console.log(res.data);
-      });
+      .then((res) => res.data);
+    return data;
   }, [data1]);
+
+  console.log(data1);
+  useEffect(() => {
+    if (token) {
+      async function getProfile() {
+        let token1 = await getToken();
+        console.log(token1.access_token);
+        let profile = await axios
+          .get("https://www.discord.com/api/v10/users/@me", {
+            headers: { Authorization: `Bearer ${token1.access_token}` },
+          })
+          .then((res) => res.data);
+        console.log(profile);
+      }
+
+      getProfile();
+    }
+  }, [getToken, token]);
 
   return (
     <div>
