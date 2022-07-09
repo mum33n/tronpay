@@ -13,6 +13,7 @@
     "css": "^3.0.0",
     "discord-oauth2": "^2.10.0",
     "dotenv": "^16.0.1",
+    "firebase": "^9.9.0",
     "https-browserify": "^1.0.0",
     "process": "^0.11.10",
     "react": "^18.2.0",
