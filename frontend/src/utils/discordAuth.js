@@ -26,5 +26,6 @@ provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
 const auth = getAuth(firebase);
 // firebase.auth().useDeviceLanguage();
 export const signInwithGoogle = () => {
-  signInWithPopup(auth, provider).then((result) => console.log(result));
+  let result = signInWithPopup(auth, provider).then((result) => result);
+  return result;
 };

@@ -5,13 +5,14 @@ pragma solidity ^0.8.0;
 
 contract Trasaction {
     //transfer events
-    event Transfer(address from, address to, string note, uint timestamp);
+    event Transfer(address from, address to, string note, uint256 timestamp);
 
     //user object
     struct userObject {
         address walletAddress;
         string userName;
         string twitterHandle;
+        string emailAddress;
     }
     //transaction object
     struct transactionObject {
@@ -32,9 +33,10 @@ contract Trasaction {
     function addUser(
         address _address,
         string memory _user,
-        string memory _handle
+        string memory _handle,
+        string memory _email
     ) public {
-        userMap[_address] = userObject(_address, _user, _handle);
+        userMap[_address] = userObject(_address, _user, _handle, _email);
     }
 
     //adding txn
@@ -44,22 +46,31 @@ contract Trasaction {
         uint256 _Amount,
         uint256 timestamp,
         string memory _note
-    ) public {
+    ) private {
         transactionsList.push(
-            transactionObject(_senderAddress, _ReceiverAddress, _Amount, timestamp, _note )
+            transactionObject(
+                _senderAddress,
+                _ReceiverAddress,
+                _Amount,
+                timestamp,
+                _note
+            )
         );
     }
 
     // get a particular user on login
     function getUser(address _address) public view returns (userObject memory) {
-        return userMap[_address];
+        userObject memory user = userMap[_address];
+        return user;
     }
 
     //send payment
-    function sendTRX(address sender, address payable _receiver, uint256 _amount, string memory note)
-        public
-        payable
-    {
+    function sendTRX(
+        address sender,
+        address payable _receiver,
+        uint256 _amount,
+        string memory note
+    ) public payable {
         _receiver.transfer(_amount);
         addTxn(sender, _receiver, _amount, block.timestamp, note);
         emit Transfer(sender, _receiver, note, block.timestamp);
