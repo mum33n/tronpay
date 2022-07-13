@@ -1,39 +1,40 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { AiFillTwitterSquare } from "react-icons/ai";
 import banner from "../assets/banner.png";
 import loader from "../assets/Spinner.svg";
 import { useWalletValue } from "../providers/WalletProvider";
 import swal from "@sweetalert/with-react";
 import Button from "../components/Button";
-import { FaDiscord, FaGoogle, FaShareAlt, FaTwitter } from "react-icons/fa";
+import { FaDiscord, FaGoogle, FaShareAlt } from "react-icons/fa";
 import { signInwithGoogle } from "../utils/discordAuth";
 import { useContractValue } from "../providers/ContractProvider";
-import Input from "../components/Input";
+// import Input from "../components/Input";
 import SwalInput from "../components/SwalInput";
-import { async } from "@firebase/util";
+import { useProfileContext } from "../providers/ProfileProvider";
+// import { async } from "@firebase/util";
 // import axios from "axios";
 
 function ProfilePage() {
   const { wallet } = useWalletValue();
   const { addUser } = useContractValue();
+  const { profile } = useProfileContext();
   const [profileForm, setProfileForm] = useState({
     Email: "",
-    Twitter: "",
+    Twitter: "hhdhdhh",
     Username: "",
   });
   console.log(profileForm);
-  async function addUsers() {
-    await addUser();
-  }
 
   const changeHandler = useCallback(
     (e) => {
+      console.log(profileForm);
       const { name, value } = e.target;
       setProfileForm((prev) => {
         return { ...prev, [name]: value };
       });
+      console.log(profileForm);
     },
-    [setProfileForm]
+    [setProfileForm, profileForm]
   );
 
   const signIn = useCallback(async () => {
@@ -52,12 +53,12 @@ function ProfilePage() {
           content: (
             <div>
               <SwalInput
-                changeHandler={changeHandler}
-                value={profileForm.Username}
+                handleChange={changeHandler}
+                value={"hhhh"}
                 label={"Username"}
               ></SwalInput>
               <SwalInput
-                changeHandler={changeHandler}
+                handleChange={changeHandler}
                 value={profileForm.Twitter}
                 label={"Twitter"}
               ></SwalInput>
@@ -65,13 +66,14 @@ function ProfilePage() {
                 value={email}
                 label={"Email"}
                 disabled={true}
-                changeHandler={changeHandler}
+                handleChange={changeHandler}
               ></SwalInput>
+              <input name="Email" onChange={(e) => changeHandler(e)} />
             </div>
           ),
         }).then(async () => {
-          const { Email, Twitter, Username } = profileForm;
-          await addUser(wallet, Username, Twitter, Email)
+          // const { Email, Twitter, Username } = profileForm;
+          await addUser(wallet, email, "Mumeen", "Twitter")
             .then(() => {
               swal("successfull");
             })
@@ -83,14 +85,7 @@ function ProfilePage() {
       .catch((err) => {
         console.log(err);
       });
-  }, [
-    profileForm.Email,
-    profileForm.Twitter,
-    profileForm.Username,
-    addUser,
-    changeHandler,
-    wallet,
-  ]);
+  }, [profileForm, addUser, changeHandler, wallet]);
   // const token = window.location.search.substring(1).split("=")[1];
   // let data = useCallback(() => {
   //   let param = new URLSearchParams({
@@ -147,7 +142,8 @@ function ProfilePage() {
         />
 
         <div className="pt-5 flex flex-wrap justify-between items-center">
-          <p className="text-white truncate">{wallet}</p>
+          {!profile && <p className="text-white truncate">{wallet}</p>}
+          {profile && <div className="text-white">{profile?.emailAddress}</div>}
           <div className="flex text-white text-3xl gap-2">
             <a href="/">
               <AiFillTwitterSquare />
@@ -164,9 +160,15 @@ function ProfilePage() {
         <div className="text-white mt-10">
           <h1>Connect Account</h1>
           <div className="flex flex-wrap gap-3 mt-5">
-            <Button onClick={signIn}>
-              <FaGoogle /> Gmail
-            </Button>
+            {profile ? (
+              <Button className={"bg-gray-700 hover:bg-gray-600"} disabled>
+                Account Connected
+              </Button>
+            ) : (
+              <Button onClick={signIn}>
+                <FaGoogle /> Gmail
+              </Button>
+            )}
           </div>
         </div>
         <div className="text-white mt-10">

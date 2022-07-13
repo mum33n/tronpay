@@ -6,7 +6,7 @@ import { useWalletValue } from "./WalletProvider";
 const contractProviderContext = createContext();
 
 function ContractProvider({ children }) {
-  const { tronWeb } = useWalletValue();
+  const { tronWeb, wallet } = useWalletValue();
 
   //   const fullNode = "https://api.shasta.trongrid.io";
   //   const solidityNode = "https://api.shasta.trongrid.io";
@@ -16,24 +16,35 @@ function ContractProvider({ children }) {
   //     []
   //   );
 
-  const contract = async () => await tronWeb?.contract().at(contractAddress);
-  console.log(contract());
+  // const contract = async () => await tronWeb?.contract().at(contractAddress);
   const addUser = useCallback(
     async (address, email, username, twitter) => {
       let contract1 = await tronWeb.contract().at(contractAddress);
       let add = await contract1
         .addUser(address, username, twitter, email)
         .send();
-      console.log(add);
+      return add;
     },
     [tronWeb]
   );
-  //   if (tronWeb) {
-  //     addUser(contractAddress, "fff", "ggg");
-  //   }
+  const getProfile = useCallback(
+    async (address) => {
+      if (wallet) {
+        console.log(tronWeb);
+        const contract = await tronWeb?.contract().at(contractAddress);
+        console.log(contract);
+        console.log();
+        let profile = await contract.userMap(wallet).call();
+        return profile;
+      } else {
+        return "";
+      }
+    },
+    [tronWeb, wallet]
+  );
   const values = useMemo(() => {
-    return { addUser };
-  }, [addUser]);
+    return { addUser, getProfile };
+  }, [addUser, getProfile]);
 
   return (
     <contractProviderContext.Provider value={values}>
