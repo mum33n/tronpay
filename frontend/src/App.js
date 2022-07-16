@@ -18,6 +18,19 @@ function App() {
           </Route>
         </Routes>
       </div>
+      <ContractProvider>
+        <ProfileProvider>
+          <div className="min-h-[100vh] w-[100vw] bg-slate-800">
+            <Routes>
+              <Route element={<AppContainer />}>
+                <Route path="/" element={<div>Hello</div>} />
+                <Route path="/pay" element={<PaymentPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+              </Route>
+            </Routes>
+          </div>
+        </ProfileProvider>
+      </ContractProvider>
     </WalletProvider>
   );
 }

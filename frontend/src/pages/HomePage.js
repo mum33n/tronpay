@@ -12,7 +12,7 @@ const HomePage = () => {
         </h1>
       </div>
       <div className="aside">
-        <img src={crypto} alt="crypto-image" width="40%" height="50%" />
+        <img src={crypto} alt="phone-holder" width="40%" height="50%" />
       </div>
 
       <content>
