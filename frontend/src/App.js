@@ -4,20 +4,12 @@ import AppContainer from "./pages/AppContainer";
 import WalletProvider from "./providers/WalletProvider";
 import PaymentPage from "./pages/PaymentPage";
 import ProfilePage from "./pages/ProfilePage";
-import HomePage from "./pages/HomePage";
+import ProfileProvider from "./providers/ProfileProvider";
+import ContractProvider from "./providers/ContractProvider";
 
 function App() {
   return (
     <WalletProvider>
-      <div className="min-h-[100vh] w-[100vw] bg-slate-800">
-        <Routes>
-          <Route element={<AppContainer />}>
-            <Route path="/pay" element={<PaymentPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/home" element={<HomePage />} />
-          </Route>
-        </Routes>
-      </div>
       <ContractProvider>
         <ProfileProvider>
           <div className="min-h-[100vh] w-[100vw] bg-slate-800">
