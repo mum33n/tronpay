@@ -85,11 +85,13 @@ function ProfilePage() {
           text: "Something went wrong!",
           // footer: '<a href="">Why do I have this issue?</a>',
         });
+        setModal(false);
       });
   }, []);
   const submitProfile = () => {
     let { Email, Username, Twitter } = profileForm;
-    addUser(wallet, Username, Twitter, Email)
+    addUser(wallet, Username, Twitter, Email);
+    setModal(false)
       .then(() => {
         Swal.fire({
           icon: "success",
@@ -100,6 +102,7 @@ function ProfilePage() {
       })
       .catch((err) => {
         console.log(err);
+        setModal(false);
         Swal.fire({
           icon: "error",
           title: "Oops...",

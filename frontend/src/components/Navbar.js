@@ -16,7 +16,9 @@ function Navbar() {
   useEffect(() => {
     getProfile(wallet).then((res) => {
       console.log(res);
-      setProfile(res);
+      if (res.emailAddress !== "") {
+        setProfile(res);
+      }
     });
   }, [getProfile, setProfile, wallet]);
   return (

@@ -19,7 +19,7 @@ function ContractProvider({ children }) {
 
   // const contract = async () => await tronWeb?.contract().at(contractAddress);
   const addUser = useCallback(
-    async (address, email, username, twitter) => {
+    async (address, username, twitter, email) => {
       let contract1 = await tronWeb.contract().at(contractAddress);
       let add = await contract1
         .addUser(address, username, twitter, email)
