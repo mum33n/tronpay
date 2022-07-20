@@ -1,133 +1,113 @@
 import React, { useCallback, useState } from "react";
-import { AiFillTwitterSquare } from "react-icons/ai";
+import { AiFillTwitterSquare, AiOutlineLink } from "react-icons/ai";
 import banner from "../assets/banner.png";
 import loader from "../assets/Spinner.svg";
 import { useWalletValue } from "../providers/WalletProvider";
-import swal from "@sweetalert/with-react";
+// import sweetalert from "sweetalert2";
+// import withReactContent from "sweetalert2-react-content";
 import Button from "../components/Button";
 import { FaDiscord, FaGoogle, FaShareAlt } from "react-icons/fa";
 import { signInwithGoogle } from "../utils/discordAuth";
 import { useContractValue } from "../providers/ContractProvider";
-// import Input from "../components/Input";
 import SwalInput from "../components/SwalInput";
 import { useProfileContext } from "../providers/ProfileProvider";
-// import { async } from "@firebase/util";
-// import axios from "axios";
+import Swal from "sweetalert2";
+
+// const MySwal = withReactContent(sweetalert);
+const Modal = ({ profileForm, setProfileForm, submit }) => {
+  const changeHandler = (e) => {
+    console.log(e);
+    const { name, value } = e.target;
+    setProfileForm((prev) => {
+      return { ...prev, [name]: value };
+    });
+    console.log(profileForm);
+  };
+
+  const { Email, Twitter, Username } = profileForm;
+  return (
+    <div className="fixed top-0 left-0 w-full h-[100vh] justify-center flex items-center bg-[#000c]">
+      <div className="bg-slate-900 md:w-1/2 w-[95] p-10">
+        <SwalInput
+          handleChange={changeHandler}
+          value={Username}
+          label={"Username"}
+        ></SwalInput>
+        <SwalInput
+          handleChange={changeHandler}
+          value={Twitter}
+          label={"Twitter"}
+        ></SwalInput>
+        <SwalInput
+          value={Email}
+          label={"Email"}
+          disabled={true}
+          handleChange={changeHandler}
+        ></SwalInput>
+        <Button
+          onClick={() => {
+            submit();
+          }}
+          className={"mt-10 gap-1 mx-auto"}
+        >
+          <AiOutlineLink className="text-xl" />
+          <div>Link Account</div>
+        </Button>
+      </div>
+    </div>
+  );
+};
 
 function ProfilePage() {
+  const [modal, setModal] = useState();
   const { wallet } = useWalletValue();
   const { addUser } = useContractValue();
   const { profile } = useProfileContext();
   const [profileForm, setProfileForm] = useState({
     Email: "",
-    Twitter: "hhdhdhh",
+    Twitter: "",
     Username: "",
   });
-  console.log(profileForm);
-
-  const changeHandler = useCallback(
-    (e) => {
-      console.log(profileForm);
-      const { name, value } = e.target;
-      setProfileForm((prev) => {
-        return { ...prev, [name]: value };
-      });
-      console.log(profileForm);
-    },
-    [setProfileForm, profileForm]
-  );
 
   const signIn = useCallback(async () => {
-    await signInwithGoogle()
+    signInwithGoogle()
       .then((res) => {
         let email = res["_tokenResponse"].email;
         setProfileForm((prev) => {
           return { ...prev, Email: email };
         });
-        swal({
-          button: {
-            text: "Link Accounts",
-            closeModal: false,
-            showCloseButton: true,
-          },
-          content: (
-            <div>
-              <SwalInput
-                handleChange={changeHandler}
-                value={"hhhh"}
-                label={"Username"}
-              ></SwalInput>
-              <SwalInput
-                handleChange={changeHandler}
-                value={profileForm.Twitter}
-                label={"Twitter"}
-              ></SwalInput>
-              <SwalInput
-                value={email}
-                label={"Email"}
-                disabled={true}
-                handleChange={changeHandler}
-              ></SwalInput>
-              <input name="Email" onChange={(e) => changeHandler(e)} />
-            </div>
-          ),
-        }).then(async () => {
-          // const { Email, Twitter, Username } = profileForm;
-          await addUser(wallet, email, "Mumeen", "Twitter")
-            .then(() => {
-              swal("successfull");
-            })
-            .catch(() => {
-              swal("error");
-            });
+        setModal(true);
+      })
+      .catch((err) => {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+          // footer: '<a href="">Why do I have this issue?</a>',
+        });
+      });
+  }, []);
+  const submitProfile = () => {
+    let { Email, Username, Twitter } = profileForm;
+    addUser(wallet, Username, Twitter, Email)
+      .then(() => {
+        Swal.fire({
+          icon: "success",
+          title: "Successful",
+          text: "Social accounts linked successfully",
+          // footer: '<a href="">Why do I have this issue?</a>',
         });
       })
       .catch((err) => {
         console.log(err);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+          // footer: '<a href="">Why do I have this issue?</a>',
+        });
       });
-  }, [profileForm, addUser, changeHandler, wallet]);
-  // const token = window.location.search.substring(1).split("=")[1];
-  // let data = useCallback(() => {
-  //   let param = new URLSearchParams({
-  //     client_id: "992266095601909840",
-  //     client_secret: "v1Hu3p4dCmtX0AJyTEBRQhz-Hxq_ixP3",
-  //     grant_type: "authorization_code",
-  //     code: token,
-  //     redirect_uri: "http://localhost:3000/profile",
-  //   });
-  //   return param;
-  // }, [token]);
-  // const data1 = useMemo(() => data(), [data]);
-  // const getToken = useCallback(async () => {
-  //   let data = await axios
-  //     .post("https://discord.com/api/oauth2/token", data1, {
-  //       headers: {
-  //         "Content-Type": "application/x-www-form-urlencoded",
-  //       },
-  //     })
-  //     .then((res) => res.data);
-  //   return data;
-  // }, [data1]);
-
-  // console.log(data1);
-  // useEffect(() => {
-  //   if (token) {
-  //     async function getProfile() {
-  //       let token1 = await getToken();
-  //       console.log(token1.access_token);
-  //       let profile = await axios
-  //         .get("https://www.discord.com/api/v10/users/@me", {
-  //           headers: { Authorization: `Bearer ${token1.access_token}` },
-  //         })
-  //         .then((res) => res.data);
-  //       console.log(profile);
-  //     }
-
-  //     getProfile();
-  //   }
-  // }, [getToken, token]);
-  const contract = useContractValue();
-  console.log(contract);
+  };
 
   return (
     <div>
@@ -143,7 +123,11 @@ function ProfilePage() {
 
         <div className="pt-5 flex flex-wrap justify-between items-center">
           {!profile && <p className="text-white truncate">{wallet}</p>}
-          {profile && <div className="text-white">{profile?.emailAddress}</div>}
+          {profile && (
+            <div className="text-white">
+              {profile?.emailAddress} {profile?.twitterHandle}
+            </div>
+          )}
           <div className="flex text-white text-3xl gap-2">
             <a href="/">
               <AiFillTwitterSquare />
@@ -176,6 +160,13 @@ function ProfilePage() {
           <img className="block max-w-full" alt="" src={loader} />
         </div>
       </div>
+      {modal && (
+        <Modal
+          submit={submitProfile}
+          profileForm={profileForm}
+          setProfileForm={setProfileForm}
+        />
+      )}
     </div>
   );
 }

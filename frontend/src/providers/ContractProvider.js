@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useMemo } from "react";
 import { contractAddress } from "../utils/constants";
 import { useWalletValue } from "./WalletProvider";
+import abi from "../utils/abi.json";
 // const tronweb = require("tronweb");
 
 const contractProviderContext = createContext();
@@ -29,12 +30,12 @@ function ContractProvider({ children }) {
   );
   const getProfile = useCallback(
     async (address) => {
+      console.log(abi[0]);
       if (wallet) {
-        console.log(tronWeb);
-        const contract = await tronWeb?.contract().at(contractAddress);
-        console.log(contract);
+        const contract = await tronWeb?.contract(abi, contractAddress);
+        console.log(contract.getUser(wallet).call());
         console.log();
-        let profile = await contract.userMap(wallet).call();
+        let profile = await contract?.getUser(wallet).call();
         return profile;
       } else {
         return "";
