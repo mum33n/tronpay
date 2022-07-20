@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Button from "./Button";
 import spinner from "../assets/gear.svg";
-import { AiOutlineWallet } from "react-icons/ai";
+// import { AiOutlineWallet } from "react-icons/ai";
+import { BsWallet } from "react-icons/bs";
 import { useWalletValue } from "../providers/WalletProvider";
 import { useContractValue } from "../providers/ContractProvider";
 import { useProfileContext } from "../providers/ProfileProvider";
+import { Link } from "react-router-dom";
 
 function Navbar() {
   const [loading, setLoading] = useState(false);
@@ -14,7 +16,9 @@ function Navbar() {
   useEffect(() => {
     getProfile(wallet).then((res) => {
       console.log(res);
-      setProfile(res);
+      if (res.emailAddress !== "") {
+        setProfile(res);
+      }
     });
   }, [getProfile, setProfile, wallet]);
   return (
@@ -25,20 +29,24 @@ function Navbar() {
     >
       <a href="/"> TRONPAY</a>
       <div className="flex items-center gap-3">
-        <a href="/pay">Payment</a>
-        <a href="/profile">Profile</a>
+        <Link to="pay">Payment</Link>
+        <Link to="profile">Profile</Link>
         {!isConnected ? (
           <Button
+            className={"gap-1"}
             onClick={() => {
               connectWallet(setLoading);
             }}
           >
             {loading ? (
-              <img src={spinner} className="block" width="40px" alt=""></img>
+              <>
+                <div>Connecting</div>
+                <img src={spinner} className="block" width="20px" alt=""></img>
+              </>
             ) : (
               <>
                 <span>Connect</span>
-                <AiOutlineWallet />
+                <BsWallet />
               </>
             )}
           </Button>

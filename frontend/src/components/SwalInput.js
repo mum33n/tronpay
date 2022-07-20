@@ -1,13 +1,13 @@
 import React from "react";
 import Input from "./Input";
 
-function SwalInput({ value, label, name, changeHandler, disabled = false }) {
+function SwalInput({ value, label, name, handleChange, disabled = false }) {
   return (
     <div className="mt-3 text-left">
-      <label htmlFor={label}>{`${label}:`}</label>
+      <label className="text-white" htmlFor={label}>{`${label}:`}</label>
       <Input
-        onChange={(e) => changeHandler(e)}
-        name={name}
+        onChange={(e) => handleChange(e)}
+        name={label}
         value={value}
         disabled={disabled}
       ></Input>{" "}
