@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useMemo } from "react";
 import { contractAddress } from "../utils/constants";
 import { useWalletValue } from "./WalletProvider";
-import abi from "../utils/abi.json";
+import { abi } from "../utils/abi.js";
 // const tronweb = require("tronweb");
 
 const contractProviderContext = createContext();
