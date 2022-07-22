@@ -61,6 +61,16 @@ contract Trasaction {
         );
     }
 
+    // get a particular
+    function getUsers(address _address)
+        public
+        view
+        returns (mapping(address => userObject))
+    {
+        mapping(address => userObject) memory user = userMap[_address];
+        return user;
+    }
+
     // get a particular user on login
     function getUser(address _address) public view returns (userObject memory) {
         userObject memory user = userMap[_address];

@@ -140,6 +140,41 @@ export const abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "getUserMap",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "walletAddress",
+            type: "address",
+          },
+          {
+            internalType: "string",
+            name: "userName",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "twitterHandle",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "emailAddress",
+            type: "string",
+          },
+        ],
+        internalType: "struct Trasaction.userObject[]",
+        name: "",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",

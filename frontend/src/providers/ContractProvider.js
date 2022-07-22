@@ -33,8 +33,8 @@ function ContractProvider({ children }) {
       console.log(abi[0]);
       if (wallet) {
         const contract = await tronWeb?.contract(abi, contractAddress);
-        console.log(contract.getUser(wallet).call());
-        console.log();
+        console.log(contract?.getUserMap().call());
+        // console.log();
         let profile = await contract?.getUser(wallet).call();
         return profile;
       } else {

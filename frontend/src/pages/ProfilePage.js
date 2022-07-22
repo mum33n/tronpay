@@ -90,9 +90,9 @@ function ProfilePage() {
   }, []);
   const submitProfile = () => {
     let { Email, Username, Twitter } = profileForm;
-    addUser(wallet, Username, Twitter, Email);
-    setModal(false)
+    addUser(wallet, Username, Twitter, Email)
       .then(() => {
+        setModal(false);
         Swal.fire({
           icon: "success",
           title: "Successful",
