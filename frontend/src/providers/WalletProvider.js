@@ -90,7 +90,7 @@ function WalletProvider({ children }) {
 
   const connectWallet = useCallback(async (loading) => {
     if (window.tronWeb) {
-      loading(true);
+      // loading(true);
       try {
         let account = await window.tronWeb.request({
           method: "tron_requestAccounts",

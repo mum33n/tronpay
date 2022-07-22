@@ -20,7 +20,7 @@ function ContractProvider({ children }) {
   // const contract = async () => await tronWeb?.contract().at(contractAddress);
   const addUser = useCallback(
     async (address, username, twitter, email) => {
-      let contract1 = await tronWeb.contract().at(contractAddress);
+      let contract1 = await tronWeb?.contract().at(contractAddress);
       let add = await contract1
         .addUser(address, username, twitter, email)
         .send();
@@ -43,8 +43,13 @@ function ContractProvider({ children }) {
     },
     [tronWeb, wallet]
   );
+  const getUsers = useCallback(async () => {
+    const contract = await tronWeb?.contract(abi, contractAddress);
+    let profile = await contract?.getUserMap().call();
+    return profile;
+  }, [tronWeb]);
   const values = useMemo(() => {
-    return { addUser, getProfile };
+    return { addUser, getProfile, getUsers };
   }, [addUser, getProfile]);
 
   return (
