@@ -48,9 +48,26 @@ function ContractProvider({ children }) {
     let profile = await contract?.getUserMap().call();
     return profile;
   }, [tronWeb]);
+  const sendTrx = useCallback(
+    async (sender, reciever, amount, note) => {
+      const contract = await tronWeb?.contract(abi, contractAddress);
+      const tradeobj = await tronWeb.transactionBuilder.sendTrx(
+        reciever,
+        amount * 1000000,
+        sender,
+        1
+      );
+      const signedtxn = await tronWeb.trx.sign(tradeobj);
+      const receipt = await tronWeb.trx.sendRawTransaction(signedtxn);
+      alert(receipt);
+      let tx = await contract?.sendTRX(sender, reciever, amount, note).send();
+      return tx;
+    },
+    [tronWeb]
+  );
   const values = useMemo(() => {
-    return { addUser, getProfile, getUsers };
-  }, [addUser, getProfile]);
+    return { addUser, getProfile, getUsers, sendTrx };
+  }, [addUser, getProfile, getUsers, sendTrx]);
 
   return (
     <contractProviderContext.Provider value={values}>

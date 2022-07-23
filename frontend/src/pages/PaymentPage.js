@@ -4,11 +4,12 @@ import Button from "../components/Button";
 import Input from "../components/Input";
 import { useContractValue } from "../providers/ContractProvider";
 import { useWalletValue } from "../providers/WalletProvider";
+// import { supportedTokens } from "../utils/support";
 
 function PaymentPage() {
   const { wallet, connectWallet } = useWalletValue();
-  const [reciepient, setReciepient] = useState();
-  const { getUsers } = useContractValue();
+  const { getUsers, sendTrx } = useContractValue();
+
   const [formValue, setForm] = useState({
     reciever: "",
     amount: "",
@@ -22,7 +23,7 @@ function PaymentPage() {
       return { ...prev, [name]: value };
     });
   }, []);
-  const sendTrx = useCallback(() => {
+  const sendTxn = useCallback(() => {
     const { amount, reciever, asset, note, method } = formValue;
     console.log(formValue);
     getUsers().then((res) => {
@@ -62,11 +63,14 @@ function PaymentPage() {
           }
         }
         alert(reciepien);
+        sendTrx(wallet, reciepien.walletAddress, amount, note).then((res) => {
+          alert(res);
+        });
       }
     });
     console.log(reciever);
     // const userMap=new Map()
-  });
+  }, [formValue, getUsers, sendTrx, wallet]);
   return (
     <div className="mt-10 md:mt-20 w-[95%] md:w-2/5 bg-slate-900 p-3 py-10 md:px-5 mx-auto">
       <div>
@@ -126,7 +130,11 @@ function PaymentPage() {
               value={formValue.asset}
             >
               <option value={1}>TRX</option>
-              <option value={2}>TRX1</option>
+              {/* {supportedTokens.map((item) => (
+                <option value={item.contractAddress}>
+                  {item.name.toUpperCase()}
+                </option>
+              ))} */}
             </select>
           </div>
         </div>
@@ -145,7 +153,7 @@ function PaymentPage() {
         <div className="md:px-10">
           {wallet ? (
             <Button
-              onClick={sendTrx}
+              onClick={sendTxn}
               className="w-[100%] md:w-[50%] mx-auto mt-5"
             >
               SEND

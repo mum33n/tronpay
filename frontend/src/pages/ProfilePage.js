@@ -15,6 +15,8 @@ import Swal from "sweetalert2";
 
 // const MySwal = withReactContent(sweetalert);
 const Modal = ({ profileForm, setProfileForm, submit }) => {
+  // const { getUsers } = useContractValue();
+
   const changeHandler = (e) => {
     console.log(e);
     const { name, value } = e.target;
@@ -61,7 +63,7 @@ const Modal = ({ profileForm, setProfileForm, submit }) => {
 function ProfilePage() {
   const [modal, setModal] = useState();
   const { wallet } = useWalletValue();
-  const { addUser } = useContractValue();
+  const { addUser, getUsers } = useContractValue();
   const { profile } = useProfileContext();
   const [profileForm, setProfileForm] = useState({
     Email: "",
@@ -72,6 +74,7 @@ function ProfilePage() {
   const signIn = useCallback(async () => {
     signInwithGoogle()
       .then((res) => {
+        console.log(res);
         let email = res["_tokenResponse"].email;
         setProfileForm((prev) => {
           return { ...prev, Email: email };
@@ -90,26 +93,63 @@ function ProfilePage() {
   }, []);
   const submitProfile = () => {
     let { Email, Username, Twitter } = profileForm;
-    addUser(wallet, Username, Twitter, Email)
-      .then(() => {
-        setModal(false);
-        Swal.fire({
-          icon: "success",
-          title: "Successful",
-          text: "Social accounts linked successfully",
-          // footer: '<a href="">Why do I have this issue?</a>',
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        setModal(false);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Something went wrong!",
-          // footer: '<a href="">Why do I have this issue?</a>',
-        });
+    const validate = () => {
+      getUsers().then((res) => {
+        if (Username && Twitter) {
+          let reciepien = [];
+          for (let user in res) {
+            console.log(res[user].userName);
+            if (res[user].userName === Username) {
+              reciepien.push("username is taken");
+              break;
+            }
+          }
+          for (let user in res) {
+            console.log(res[user].twitterHandle);
+            if (res[user].twitterHandle === Twitter) {
+              reciepien.push("Twitter username is taken");
+              break;
+            }
+          }
+          for (let user in res) {
+            console.log(res[user].twitterHandle);
+            if (res[user].emailAddress === Email) {
+              reciepien.push("Email is already registered");
+              break;
+            }
+          }
+          if (reciepien.length === 0) {
+            addUser(wallet, Username, Twitter, Email)
+              .then(() => {
+                setModal(false);
+                Swal.fire({
+                  icon: "success",
+                  title: "Successful",
+                  text: "Social accounts linked successfully",
+                  // footer: '<a href="">Why do I have this issue?</a>',
+                });
+              })
+              .catch((err) => {
+                console.log(err);
+                setModal(false);
+                Swal.fire({
+                  icon: "error",
+                  title: "Oops...",
+                  text: "Something went wrong!",
+                  // footer: '<a href="">Why do I have this issue?</a>',
+                });
+              });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: reciepien,
+            });
+          }
+        }
       });
+    };
+    validate();
   };
 
   return (
