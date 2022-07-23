@@ -95,16 +95,22 @@ function WalletProvider({ children }) {
         let account = await window.tronWeb.request({
           method: "tron_requestAccounts",
         });
+        setTronWeb(window.tronWeb);
         if (account.code === 200) {
           setConnection(true);
           setWallet(window.tronWeb.defaultAddress.base58);
           loading(false);
         } else {
-          let err = { error: "rejected by the user" };
+          let err = { account };
           throw err;
         }
       } catch (err) {
-        alert("Rejected by the user");
+        if (err.account.code === 4001) {
+          alert("Rejected by the user");
+          console.log(err);
+        } else {
+          alert("Unlock your Tronlink wallet");
+        }
         loading(false);
       }
     } else {
