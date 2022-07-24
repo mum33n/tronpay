@@ -173,7 +173,7 @@ function ProfilePage() {
         <img
           src={banner}
           alt=""
-          className="md:w-[150px] w-[100px] outline outline-10 outline-white block md:h-[150px] h-[100px] rounded-full"
+          className="md:w-[150px] w-[100px] outline outline-10 outline-slate-800 block md:h-[150px] h-[100px] rounded-full"
         />
 
         <div className="pt-5 flex flex-wrap justify-between items-center">
