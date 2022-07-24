@@ -1,7 +1,13 @@
 import React, { useCallback, useState } from "react";
-import { AiFillTwitterSquare, AiOutlineLink } from "react-icons/ai";
+import tron from "../assets/tron.png";
+import {
+  AiFillTwitterSquare,
+  AiOutlineCheckCircle,
+  AiOutlineClockCircle,
+  AiOutlineLink,
+} from "react-icons/ai";
 import banner from "../assets/banner.png";
-import loader from "../assets/Spinner.svg";
+// import loader from "../assets/Spinner.svg";
 import { useWalletValue } from "../providers/WalletProvider";
 // import sweetalert from "sweetalert2";
 // import withReactContent from "sweetalert2-react-content";
@@ -69,6 +75,7 @@ function ProfilePage() {
     Email: "",
     Twitter: "",
     Username: "",
+    image: "",
   });
 
   const signIn = useCallback(async () => {
@@ -76,8 +83,9 @@ function ProfilePage() {
       .then((res) => {
         console.log(res);
         let email = res["_tokenResponse"].email;
+        let img = res["_tokenResponse"].photoUrl;
         setProfileForm((prev) => {
-          return { ...prev, Email: email };
+          return { ...prev, Email: email, image: img };
         });
         setModal(true);
       })
@@ -92,11 +100,12 @@ function ProfilePage() {
       });
   }, []);
   const submitProfile = () => {
-    let { Email, Username, Twitter } = profileForm;
+    let { Email, Username, Twitter, image } = profileForm;
     const validate = () => {
       getUsers().then((res) => {
+        console.log(res);
+        let reciepien = [];
         if (Username && Twitter) {
-          let reciepien = [];
           for (let user in res) {
             console.log(res[user].userName);
             if (res[user].userName === Username) {
@@ -118,8 +127,11 @@ function ProfilePage() {
               break;
             }
           }
+
+          console.log(reciepien.length);
           if (reciepien.length === 0) {
-            addUser(wallet, Username, Twitter, Email)
+            console.log("hello");
+            addUser(wallet, Username, Twitter, Email, image)
               .then(() => {
                 setModal(false);
                 Swal.fire({
@@ -155,7 +167,7 @@ function ProfilePage() {
   return (
     <div>
       <div>
-        <img src={banner} alt="" className="w-full block max-h-[300px]" />
+        <div className="profile h-[40vh]"></div>
       </div>
       <div className="px-5 md:px-10 md:-mt-20 -mt-[50px]">
         <img
@@ -200,7 +212,117 @@ function ProfilePage() {
         </div>
         <div className="text-white mt-10">
           <h1>Recent History</h1>
-          <img className="block max-w-full" alt="" src={loader} />
+          {/* <img className="block max-w-full" alt="" src={loader} /> */}
+          <div className="flex mt-5 flex-wrap">
+            <div className="rounded p-2 relative bg-slate-700 w-[90%] mx-auto md:w-1/5">
+              <div className="flex justify-between">
+                <AiOutlineClockCircle className="text-2xl text-yellow-600" />
+                <div>
+                  <button className="bg-green-700 px-5 rounded-full">IN</button>
+                </div>
+              </div>
+              <div className="flex mt-3 justify-between items-end">
+                <div>
+                  <div>at: 23/15/2022</div>
+                  <div>from: TRES....iOy5</div>
+                  <div>to: TRES....iOy5</div>
+                </div>
+                <div>
+                  <div className="flex items-center">
+                    <img src={tron} alt="" width={"20px"}></img>
+                    <div>100</div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-5 h-[99px] overflow-y-scroll max-h-[100px]">
+                this is for note...
+              </div>
+              <button className="rounded-full px-7 py-2.5 mx-auto bg-green-500 block">
+                Claim
+              </button>
+            </div>
+            <div className="rounded p-2 relative bg-slate-700 w-[90%] mx-auto md:w-1/5">
+              <div className="flex justify-between">
+                <AiOutlineClockCircle className="text-2xl text-yellow-600" />
+                <div>
+                  <button className="bg-red-700 px-5 rounded-full">OUT</button>
+                </div>
+              </div>
+              <div className="flex mt-3 justify-between items-end">
+                <div>
+                  <div>at: 23/15/2022</div>
+                  <div>from: TRES....iOy5</div>
+                  <div>to: TRES....iOy5</div>
+                </div>
+                <div>
+                  <div className="flex items-center">
+                    <img src={tron} alt="" width={"20px"}></img>
+                    <div>100</div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-5 h-[99px] overflow-y-scroll max-h-[100px]">
+                this is for note...
+              </div>
+              <button className="rounded-full px-7 py-2.5 mx-auto bg-red-500 block">
+                Revert
+              </button>
+            </div>
+            <div className="rounded p-2 relative bg-slate-700 w-[90%] mx-auto md:w-1/5">
+              <div className="flex justify-between">
+                <AiOutlineCheckCircle className="text-2xl text-green-600" />
+                <div>
+                  <button className="bg-green-700 px-5 rounded-full">IN</button>
+                </div>
+              </div>
+              <div className="flex mt-3 justify-between items-end">
+                <div>
+                  <div>at: 23/15/2022</div>
+                  <div>from: TRES....iOy5</div>
+                  <div>to: TRES....iOy5</div>
+                </div>
+                <div>
+                  <div className="flex items-center">
+                    <img src={tron} alt="" width={"20px"}></img>
+                    <div>100</div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-5 h-[99px] overflow-y-scroll max-h-[100px]">
+                this is for note...
+              </div>
+              <button className="rounded-full px-7 py-2.5 mx-auto bg-green-900 block">
+                Successful
+              </button>
+            </div>
+            <div className="rounded p-2 relative bg-slate-700 w-[90%] mx-auto md:w-1/5">
+              <div className="flex justify-between">
+                <AiOutlineClockCircle className="text-2xl text-yellow-600" />
+                <div>
+                  <button className="bg-green-700 px-5 rounded-full">IN</button>
+                </div>
+              </div>
+              <div className="flex mt-3 justify-between items-end">
+                <div>
+                  <div>at: 23/15/2022</div>
+                  <div>from: TRES....iOy5</div>
+                  <div>to: TRES....iOy5</div>
+                </div>
+                <div>
+                  <div className="flex items-center">
+                    <img src={tron} width={"20px"} alt=""></img>
+                    <div>100</div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-5 h-[99px] overflow-y-scroll max-h-[100px]">
+                this is for note...
+              </div>
+              <button className="rounded-full px-7 py-2.5 mx-auto bg-green-500 block">
+                Claim
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       {modal && (
