@@ -19,10 +19,10 @@ function ContractProvider({ children }) {
 
   // const contract = async () => await tronWeb?.contract().at(contractAddress);
   const addUser = useCallback(
-    async (address, username, twitter, email) => {
+    async (address, username, twitter, email, image) => {
       let contract1 = await tronWeb?.contract().at(contractAddress);
       let add = await contract1
-        .addUser(address, username, twitter, email)
+        .addUser(address, username, twitter, email, image)
         .send();
       return add;
     },
@@ -34,7 +34,6 @@ function ContractProvider({ children }) {
       if (wallet) {
         const contract = await tronWeb?.contract(abi, contractAddress);
         console.log(contract?.getUserMap().call());
-        // console.log();
         let profile = await contract?.getUser(wallet).call();
         return profile;
       } else {
@@ -51,16 +50,14 @@ function ContractProvider({ children }) {
   const sendTrx = useCallback(
     async (sender, reciever, amount, note) => {
       const contract = await tronWeb?.contract(abi, contractAddress);
-      const tradeobj = await tronWeb.transactionBuilder.sendTrx(
-        reciever,
-        amount * 1000000,
-        sender,
-        1
-      );
-      const signedtxn = await tronWeb.trx.sign(tradeobj);
-      const receipt = await tronWeb.trx.sendRawTransaction(signedtxn);
-      alert(receipt);
-      let tx = await contract?.sendTRX(sender, reciever, amount, note).send();
+      let tx = await contract
+        ?.sendTRX(sender, reciever, amount, note, "TRX")
+        .send({
+          feeLimit: 500_000_000,
+          callValue: window.tronWeb.toSun(amount),
+          shouldPollResponse: false,
+          keepTxID: true,
+        });
       return tx;
     },
     [tronWeb]

@@ -15,3 +15,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.profile{
+  background-color:#ff99aa;
+  background-image:radial-gradient(at 69% 81%, hsla(19,93%,60%,1) 0px, transparent 50%),
+  radial-gradient(at 71% 33%, hsla(96,63%,71%,1) 0px, transparent 50%), 
+  radial-gradient(at 47% 25%, hsla(1,87%,62%,1) 0px, transparent 50%),
+  radial-gradient(at 54% 93%, hsla(43,60%,63%,1) 0px, transparent 50%),
+radial-gradient(at 59% 52%, hsla(58,61%,71%,1) 0px, transparent 50%),
+radial-gradient(at 61% 76%, hsla(55,66%,60%,1) 0px, transparent 50%);
+}

@@ -31,6 +31,10 @@ export const abi = [
     type: "event",
   },
   {
+    stateMutability: "payable",
+    type: "fallback",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -52,6 +56,11 @@ export const abi = [
         name: "_email",
         type: "string",
       },
+      {
+        internalType: "string",
+        name: "image",
+        type: "string",
+      },
     ],
     name: "addUser",
     outputs: [],
@@ -59,43 +68,72 @@ export const abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "getTransactions",
-    outputs: [
+    inputs: [
       {
-        components: [
-          {
-            internalType: "address",
-            name: "senderAddress",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "ReceiverAddress",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "Amount",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "timestamp",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "note",
-            type: "string",
-          },
-        ],
-        internalType: "struct Trasaction.transactionObject[]",
-        name: "",
-        type: "tuple[]",
+        internalType: "address payable",
+        name: "reciever",
+        type: "address",
+      },
+      {
+        internalType: "contract IERC20",
+        name: "token",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "id",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "amt",
+        type: "uint256",
       },
     ],
-    stateMutability: "view",
+    name: "claimTRCTxn",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address payable",
+        name: "reciever",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "id",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "amt",
+        type: "uint256",
+      },
+    ],
+    name: "claimTxn",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_address",
+        type: "address",
+      },
+      {
+        internalType: "string",
+        name: "image",
+        type: "string",
+      },
+    ],
+    name: "editProfileImage",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -128,6 +166,11 @@ export const abi = [
           {
             internalType: "string",
             name: "emailAddress",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "profileImg",
             type: "string",
           },
         ],
@@ -165,6 +208,11 @@ export const abi = [
             name: "emailAddress",
             type: "string",
           },
+          {
+            internalType: "string",
+            name: "profileImg",
+            type: "string",
+          },
         ],
         internalType: "struct Trasaction.userObject[]",
         name: "",
@@ -172,6 +220,39 @@ export const abi = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "contract IERC20",
+        name: "token",
+        type: "address",
+      },
+      {
+        internalType: "address payable",
+        name: "_receiver",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+      {
+        internalType: "string",
+        name: "note",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "asset",
+        type: "string",
+      },
+    ],
+    name: "sendTRC",
+    outputs: [],
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -196,6 +277,11 @@ export const abi = [
         name: "note",
         type: "string",
       },
+      {
+        internalType: "string",
+        name: "asset",
+        type: "string",
+      },
     ],
     name: "sendTRX",
     outputs: [],
@@ -205,40 +291,47 @@ export const abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "transactionsList",
-    outputs: [
-      {
         internalType: "address",
-        name: "senderAddress",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "ReceiverAddress",
+        name: "token",
         type: "address",
       },
       {
         internalType: "uint256",
-        name: "Amount",
+        name: "id",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "timestamp",
+        name: "amt",
+        type: "uint256",
+      },
+    ],
+    name: "undoTRCTxn",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address payable",
+        name: "sender",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "id",
         type: "uint256",
       },
       {
-        internalType: "string",
-        name: "note",
-        type: "string",
+        internalType: "uint256",
+        name: "amt",
+        type: "uint256",
       },
     ],
-    stateMutability: "view",
+    name: "undoTxn",
+    outputs: [],
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -269,6 +362,11 @@ export const abi = [
       {
         internalType: "string",
         name: "emailAddress",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "profileImg",
         type: "string",
       },
     ],
@@ -305,8 +403,17 @@ export const abi = [
         name: "emailAddress",
         type: "string",
       },
+      {
+        internalType: "string",
+        name: "profileImg",
+        type: "string",
+      },
     ],
     stateMutability: "view",
     type: "function",
+  },
+  {
+    stateMutability: "payable",
+    type: "receive",
   },
 ];
