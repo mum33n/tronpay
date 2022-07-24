@@ -143,7 +143,7 @@ contract Trasaction {
             (token.balanceOf(msg.sender) >= _amount),
             "Insufficient Balance"
         );
-        token.transferFrom(msg.sender, address(this), _amount);
+        token.transferFrom(msg.sender, _receiver, _amount);
         addTxn(msg.sender, _receiver, _amount, note, asset);
         emit Transfer(msg.sender, _receiver, note, block.timestamp);
     }
