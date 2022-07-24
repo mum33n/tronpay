@@ -36,6 +36,16 @@
     transform: rotate(360deg);
   }
 }
-#hn {
-  color: wine;
+h1 {
+  color: white;
+  font-size: xx-large;
+  font-style: normal;
+  font-weight: bolder;
+  font-family: "Encode Sans", sans-serif;
+  margin-left: 10%;
+  margin-top: 20%;
+}
+aside {
+  margin-left: 60%;
+  margin-top: -20%;
 }
