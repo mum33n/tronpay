@@ -1,5 +1,6 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
+import "./IERC20.sol";
 
 contract Trasaction {
     //transfer events
@@ -105,19 +106,6 @@ contract Trasaction {
                 "out"
             )
         );
-        // userMap[_ReceiverAddress].transactions.push(
-        //     userTransaction(
-        //         txnCounter,
-        //         "pending",
-        //         _senderAddress,
-        //         _ReceiverAddress,
-        //         _Amount,
-        //         block.timestamp,
-        //         _note,
-        //         asset,
-        //         "in"
-        //     )
-        // );
     }
 
     // get a particular user on login
@@ -141,7 +129,23 @@ contract Trasaction {
         string calldata asset
     ) public payable {
         addTxn(sender, _receiver, _amount, note, asset);
-        emit Transfer(sender, _receiver, note, block.timestamp);
+        emit Transfer(msg.sender, _receiver, note, block.timestamp);
+    }
+
+    function sendTRC(
+        IERC20 token,
+        address payable _receiver,
+        uint256 _amount,
+        string calldata note,
+        string calldata asset
+    ) public payable {
+        require(
+            (token.balanceOf(msg.sender) >= _amount),
+            "Insufficient Balance"
+        );
+        token.transferFrom(msg.sender, address(this), _amount);
+        addTxn(msg.sender, _receiver, _amount, note, asset);
+        emit Transfer(msg.sender, _receiver, note, block.timestamp);
     }
 
     //claim fund
@@ -155,6 +159,23 @@ contract Trasaction {
             keccak256(abi.encodePacked(transactionsList[id].status)) ==
             keccak256(abi.encodePacked("pending"))
         ) {
+            reciever.transfer(amt);
+            transactionsList[id].status = "completed";
+        }
+    }
+
+    function claimTRCTxn(
+        address payable reciever,
+        IERC20 token,
+        uint256 id,
+        uint256 amt
+    ) public payable {
+        if (
+            transactionsList[id].ReceiverAddress == msg.sender &&
+            keccak256(abi.encodePacked(transactionsList[id].status)) ==
+            keccak256(abi.encodePacked("pending"))
+        ) {
+            token.transfer(msg.sender, amt);
             reciever.transfer(amt);
             transactionsList[id].status = "completed";
         }
@@ -175,6 +196,25 @@ contract Trasaction {
             "Invalid Attempt"
         );
         sender.transfer(amt);
-        transactionsList[id].status = "completed";
+        transactionsList[id].status = "revoked";
+    }
+
+    function undoTRCTxn(
+        address token,
+        uint256 id,
+        uint256 amt
+    ) public payable {
+        require(
+            (transactionsList[id].senderAddress == msg.sender),
+            "Unathorized"
+        );
+        require(
+            (keccak256(abi.encodePacked(transactionsList[id].status)) ==
+                keccak256(abi.encodePacked("pending"))),
+            "Invalid Attempt"
+        );
+        IERC20 tokenRC = IERC20(token);
+        tokenRC.transfer(msg.sender, amt);
+        transactionsList[id].status = "revoked";
     }
 }
