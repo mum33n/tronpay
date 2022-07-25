@@ -55,6 +55,11 @@ contract Trasaction {
     // //transactions
     userTransaction[] transactionsList;
 
+    //get transactions
+    function getTransactions() public view returns (userTransaction[] memory) {
+        return transactionsList;
+    }
+
     // adding user on connection with Email
     function addUser(
         address _address,
@@ -88,14 +93,15 @@ contract Trasaction {
         address _ReceiverAddress,
         uint256 _Amount,
         string calldata _note,
-        string calldata asset
+        string calldata asset,
+        string memory state
     ) private {
         txnCounter += 1;
         uint256 index = transactionsList.length;
         transactionsList.push(
             userTransaction(
                 txnCounter,
-                "pending",
+                state,
                 index,
                 _senderAddress,
                 _ReceiverAddress,
@@ -128,10 +134,11 @@ contract Trasaction {
         string calldata note,
         string calldata asset
     ) public payable {
-        addTxn(sender, _receiver, _amount, note, asset);
+        addTxn(sender, _receiver, _amount, note, asset, "pending");
         emit Transfer(msg.sender, _receiver, note, block.timestamp);
     }
 
+    //direct sending
     function sendTRC(
         IERC20 token,
         address payable _receiver,
@@ -144,7 +151,23 @@ contract Trasaction {
             "Insufficient Balance"
         );
         token.transferFrom(msg.sender, _receiver, _amount);
-        addTxn(msg.sender, _receiver, _amount, note, asset);
+        addTxn(msg.sender, _receiver, _amount, note, asset, "completed");
+        emit Transfer(msg.sender, _receiver, note, block.timestamp);
+    }
+
+    function sendClaimTRC(
+        IERC20 token,
+        address payable _receiver,
+        uint256 _amount,
+        string calldata note,
+        string calldata asset
+    ) public payable {
+        require(
+            (token.balanceOf(msg.sender) >= _amount),
+            "Insufficient Balance"
+        );
+        token.transferFrom(msg.sender, address(this), _amount);
+        addTxn(msg.sender, _receiver, _amount, note, asset, "prending");
         emit Transfer(msg.sender, _receiver, note, block.timestamp);
     }
 

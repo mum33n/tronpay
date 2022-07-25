@@ -137,6 +137,71 @@ export const abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "getTransactions",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "id",
+            type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "status",
+            type: "string",
+          },
+          {
+            internalType: "uint256",
+            name: "index",
+            type: "uint256",
+          },
+          {
+            internalType: "address",
+            name: "senderAddress",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "ReceiverAddress",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "Amount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "timestamp",
+            type: "uint256",
+          },
+          {
+            internalType: "string",
+            name: "note",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "asset",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "direction",
+            type: "string",
+          },
+        ],
+        internalType: "struct Trasaction.userTransaction[]",
+        name: "",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -220,6 +285,39 @@ export const abi = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "contract IERC20",
+        name: "token",
+        type: "address",
+      },
+      {
+        internalType: "address payable",
+        name: "_receiver",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
+      {
+        internalType: "string",
+        name: "note",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "asset",
+        type: "string",
+      },
+    ],
+    name: "sendClaimTRC",
+    outputs: [],
+    stateMutability: "payable",
     type: "function",
   },
   {

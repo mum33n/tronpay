@@ -4,18 +4,18 @@ import Button from "../components/Button";
 import Input from "../components/Input";
 import { useContractValue } from "../providers/ContractProvider";
 import { useWalletValue } from "../providers/WalletProvider";
-// import { supportedTokens } from "../utils/support";
+import { supportedTokens, supportedTokensMap } from "../utils/support";
 
 function PaymentPage() {
   const { wallet, connectWallet } = useWalletValue();
-  const { getUsers, sendTrx } = useContractValue();
-
+  const { getUsers, sendTrx, sendTRC } = useContractValue();
+  console.log(supportedTokensMap());
   const [formValue, setForm] = useState({
     reciever: "",
     amount: "",
-    asset: 1,
+    asset: "1",
     note: "",
-    method: "address",
+    method: "twitter",
   });
   const changeHandler = useCallback((e) => {
     const { name, value } = e.target;
@@ -63,14 +63,28 @@ function PaymentPage() {
           }
         }
         alert(reciepien);
-        sendTrx(wallet, reciepien.walletAddress, amount, note).then((res) => {
-          alert(res);
-        });
+        if (asset === "1") {
+          sendTrx(wallet, reciepien.walletAddress, amount, note).then((res) => {
+            alert(res);
+          });
+        } else {
+          let tokenDetails = supportedTokensMap().get(asset);
+          sendTRC(
+            tokenDetails.contractAddress,
+            reciepien.walletAddress,
+            amount * 10 ** tokenDetails.decimal,
+            note,
+            tokenDetails.name
+          ).then((res) => {
+            alert(res);
+          });
+        }
       }
     });
     console.log(reciever);
+
     // const userMap=new Map()
-  }, [formValue, getUsers, sendTrx, wallet]);
+  }, [formValue, getUsers, sendTrx, wallet, sendTRC]);
   return (
     <div className="mt-10 md:mt-20 w-[95%] md:w-2/5 bg-slate-900 p-3 py-10 md:px-5 mx-auto">
       <div>
@@ -88,7 +102,6 @@ function PaymentPage() {
               value={formValue.method}
             >
               <option value={"username"}>Username</option>
-              <option value={"address"}>Address</option>
               <option value={"twitter"}>Twitter</option>
               <option value={"email"}>Email</option>
             </select>
@@ -129,12 +142,10 @@ function PaymentPage() {
               name="asset"
               value={formValue.asset}
             >
-              <option value={1}>TRX</option>
-              {/* {supportedTokens.map((item) => (
-                <option value={item.contractAddress}>
-                  {item.name.toUpperCase()}
-                </option>
-              ))} */}
+              <option value={"1"}>TRX</option>
+              {supportedTokens.map((item) => (
+                <option value={item.name}>{item.name.toUpperCase()}</option>
+              ))}
             </select>
           </div>
         </div>

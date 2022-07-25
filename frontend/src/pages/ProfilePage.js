@@ -18,6 +18,7 @@ import { useContractValue } from "../providers/ContractProvider";
 import SwalInput from "../components/SwalInput";
 import { useProfileContext } from "../providers/ProfileProvider";
 import Swal from "sweetalert2";
+import Transaction from "../components/Transaction";
 
 // const MySwal = withReactContent(sweetalert);
 const Modal = ({ profileForm, setProfileForm, submit }) => {
@@ -70,7 +71,7 @@ function ProfilePage() {
   const [modal, setModal] = useState();
   const { wallet } = useWalletValue();
   const { addUser, getUsers } = useContractValue();
-  const { profile } = useProfileContext();
+  const { profile, history } = useProfileContext();
   const [profileForm, setProfileForm] = useState({
     Email: "",
     Twitter: "",
@@ -171,7 +172,7 @@ function ProfilePage() {
       </div>
       <div className="px-5 md:px-10 md:-mt-20 -mt-[50px]">
         <img
-          src={banner}
+          src={profile?.profileImg ? profile.profileImg : banner}
           alt=""
           className="md:w-[150px] w-[100px] outline outline-10 outline-slate-800 block md:h-[150px] h-[100px] rounded-full"
         />
@@ -214,33 +215,10 @@ function ProfilePage() {
           <h1>Recent History</h1>
           {/* <img className="block max-w-full" alt="" src={loader} /> */}
           <div className="flex mt-5 flex-wrap">
-            <div className="rounded p-2 relative bg-slate-700 w-[90%] mx-auto md:w-1/5">
-              <div className="flex justify-between">
-                <AiOutlineClockCircle className="text-2xl text-yellow-600" />
-                <div>
-                  <button className="bg-green-700 px-5 rounded-full">IN</button>
-                </div>
-              </div>
-              <div className="flex mt-3 justify-between items-end">
-                <div>
-                  <div>at: 23/15/2022</div>
-                  <div>from: TRES....iOy5</div>
-                  <div>to: TRES....iOy5</div>
-                </div>
-                <div>
-                  <div className="flex items-center">
-                    <img src={tron} alt="" width={"20px"}></img>
-                    <div>100</div>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-5 h-[99px] overflow-y-scroll max-h-[100px]">
-                this is for note...
-              </div>
-              <button className="rounded-full px-7 py-2.5 mx-auto bg-green-500 block">
-                Claim
-              </button>
-            </div>
+            {history &&
+              history.map((data, index) => (
+                <Transaction data={data} key={index} />
+              ))}
             <div className="rounded p-2 relative bg-slate-700 w-[90%] mx-auto md:w-1/5">
               <div className="flex justify-between">
                 <AiOutlineClockCircle className="text-2xl text-yellow-600" />
