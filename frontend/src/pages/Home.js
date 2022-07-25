@@ -1,4 +1,7 @@
 import phone from "../assets/phone.png";
+import git from "../assets/git.png";
+import file from "../assets/file.png";
+import tron from "../assets/tron.png";
 import Typewriter from "typewriter-effect";
 const Home = () => {
   return (
@@ -31,12 +34,15 @@ const Home = () => {
         <img src={phone} width={"600px"}></img>
       </aside>
 
-      <sponsors>
-        <center>
-          <h2>OUR FEATURED SPONSORS</h2>
-        </center>
+      <center>
+        <h2>OUR FEATURED SPONSORS</h2>
+      </center>
 
-        <h3>fg</h3>
+      <sponsors>
+        <h3></h3>
+        <img src={git}></img>
+        <img src={file}></img>
+        <img src={tron}></img>
       </sponsors>
     </>
   );

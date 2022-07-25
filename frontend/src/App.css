@@ -68,3 +68,7 @@ h3 {
   background-color: white;
   height: 200px;
 }
+sponsors {
+  display: flex;
+  justify-content: space-evenly;
+}
