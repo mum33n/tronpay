@@ -42,7 +42,7 @@ const Home = () => {
         <h3></h3>
         <img src={git}></img>
         <img src={file}></img>
-        <img src={tron}></img>
+        <img src={tron} alt="" width={"150px"}></img>
       </sponsors>
     </>
   );

@@ -65,10 +65,10 @@ h2 {
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 }
 h3 {
-  background-color: white;
   height: 200px;
 }
 sponsors {
+  background-color: white;
   display: flex;
   justify-content: space-evenly;
 }
