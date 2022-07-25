@@ -6,6 +6,7 @@ import PaymentPage from "./pages/PaymentPage";
 import ProfilePage from "./pages/ProfilePage";
 import ProfileProvider from "./providers/ProfileProvider";
 import Home from "./pages/Home";
+import Typewriter from "typewriter-effect";
 import ContractProvider from "./providers/ContractProvider";
 
 function App() {
