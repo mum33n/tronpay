@@ -71,7 +71,6 @@ function PaymentPage() {
               )
               .catch((err) => {
                 console.log(err);
-                setModal(false);
                 Swal.fire({
                   icon: "error",
                   title: "Oops...",
@@ -98,7 +97,6 @@ function PaymentPage() {
               )
               .catch((err) => {
                 console.log(err);
-                setModal(false);
                 Swal.fire({
                   icon: "error",
                   title: "Oops...",

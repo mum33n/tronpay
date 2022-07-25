@@ -60,7 +60,7 @@ function ContractProvider({ children }) {
         tronWeb.toSun(amount)
       );
       const signedtxn = await tronWeb.trx.sign(tradeobj);
-      const receipt = await tronWeb.trx.sendRawTransaction(signedtxn);
+      await tronWeb.trx.sendRawTransaction(signedtxn);
       let tx = await contract
         ?.sendTRX(sender, reciever, amount, note, "TRX")
         .send();
@@ -73,7 +73,7 @@ function ContractProvider({ children }) {
       const contract = await tronWeb?.contract(abi, contractAddress);
       const contract1 = await tronWeb?.contract().at(asset);
 
-      let approve = await contract1
+      await contract1
         .approve("TQJBBsQF78Qeo4k36tdTPrhX7TbwPQ221D", amount)
         .send();
       let tx = await contract
