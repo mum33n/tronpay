@@ -29,7 +29,10 @@ function Navbar() {
       }
     >
       <a href="/"> TRONPAY</a>
-      <AiOutlineBars onClick={() => setToggle((prev) => !prev)} />
+      <AiOutlineBars
+        className="text-lg md:hidden "
+        onClick={() => setToggle((prev) => !prev)}
+      />
       <div className="md:flex hidden items-center gap-3">
         <Link to="pay">Payment</Link>
         <Link to="profile">Profile</Link>

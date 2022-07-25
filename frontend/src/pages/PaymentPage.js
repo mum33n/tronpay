@@ -4,6 +4,7 @@ import Button from "../components/Button";
 import Input from "../components/Input";
 import { useContractValue } from "../providers/ContractProvider";
 import { useWalletValue } from "../providers/WalletProvider";
+import Swal from "sweetalert2";
 import { supportedTokens, supportedTokensMap } from "../utils/support";
 
 function PaymentPage() {
@@ -57,21 +58,61 @@ function PaymentPage() {
             }
           }
         }
-        alert(reciepien);
-        if (asset === "1") {
-          sendTrx(wallet, reciepien.walletAddress, amount, note).then((res) => {
-            alert(res);
-          });
+        if (reciepien) {
+          if (asset === "1") {
+            sendTrx(wallet, reciepien.walletAddress, amount, note)
+              .then((res) =>
+                Swal.fire({
+                  icon: "success",
+                  title: "Successful",
+                  text: "Social accounts linked successfully",
+                  // footer: '<a href="">Why do I have this issue?</a>',
+                })
+              )
+              .catch((err) => {
+                console.log(err);
+                setModal(false);
+                Swal.fire({
+                  icon: "error",
+                  title: "Oops...",
+                  text: "Something went wrong!",
+                  // footer: '<a href="">Why do I have this issue?</a>',
+                });
+              });
+          } else {
+            let tokenDetails = supportedTokensMap().get(asset);
+            sendTRC(
+              tokenDetails.contractAddress,
+              reciepien.walletAddress,
+              amount * 10 ** tokenDetails.decimal,
+              note,
+              tokenDetails.name
+            )
+              .then((res) =>
+                Swal.fire({
+                  icon: "success",
+                  title: "Successful",
+                  text: "Social accounts linked successfully",
+                  // footer: '<a href="">Why do I have this issue?</a>',
+                })
+              )
+              .catch((err) => {
+                console.log(err);
+                setModal(false);
+                Swal.fire({
+                  icon: "error",
+                  title: "Oops...",
+                  text: "Something went wrong!",
+                  // footer: '<a href="">Why do I have this issue?</a>',
+                });
+              });
+          }
         } else {
-          let tokenDetails = supportedTokensMap().get(asset);
-          sendTRC(
-            tokenDetails.contractAddress,
-            reciepien.walletAddress,
-            amount * 10 ** tokenDetails.decimal,
-            note,
-            tokenDetails.name
-          ).then((res) => {
-            alert(res);
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "No user with the provided username!",
+            // footer: '<a href="">Why do I have this issue?</a>',
           });
         }
       }
@@ -100,7 +141,7 @@ function PaymentPage() {
           </div>
           <div className="mx-auto md:flex-1 items-center gap-5 justify-center flex-wrap ">
             <label className="text-white block " htmlFor="reciepient">
-              Address:
+              Username:
             </label>
             <Input
               onChange={(e) => changeHandler(e)}
