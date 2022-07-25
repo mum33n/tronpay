@@ -5,6 +5,7 @@ import React, {
   useState,
   useMemo,
 } from "react";
+import Swal from "sweetalert2";
 const walletProviderContext = createContext();
 function WalletProvider({ children }) {
   const [wallet, setWallet] = useState();
@@ -106,15 +107,30 @@ function WalletProvider({ children }) {
         }
       } catch (err) {
         if (err.account.code === 4001) {
-          alert("Rejected by the user");
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Rejected by the user",
+            // footer: '<a href="">Why do I have this issue?</a>',
+          });
           console.log(err);
         } else {
-          alert("Unlock your Tronlink wallet");
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Unlock your Tronlink wallet",
+            // footer: '<a href="">Why do I have this issue?</a>',
+          });
         }
         loading(false);
       }
     } else {
-      alert("Tronlink is Not installed");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Tronlink is Not installed",
+        // footer: '<a href="">Why do I have this issue?</a>',
+      });
     }
   }, []);
 

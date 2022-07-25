@@ -4,18 +4,18 @@ import Button from "../components/Button";
 import Input from "../components/Input";
 import { useContractValue } from "../providers/ContractProvider";
 import { useWalletValue } from "../providers/WalletProvider";
-// import { supportedTokens } from "../utils/support";
+import Swal from "sweetalert2";
+import { supportedTokens, supportedTokensMap } from "../utils/support";
 
 function PaymentPage() {
   const { wallet, connectWallet } = useWalletValue();
-  const { getUsers, sendTrx } = useContractValue();
-
+  const { getUsers, sendTrx, sendTRC } = useContractValue();
   const [formValue, setForm] = useState({
     reciever: "",
     amount: "",
-    asset: 1,
+    asset: "1",
     note: "",
-    method: "address",
+    method: "twitter",
   });
   const changeHandler = useCallback((e) => {
     const { name, value } = e.target;
@@ -25,13 +25,12 @@ function PaymentPage() {
   }, []);
   const sendTxn = useCallback(() => {
     const { amount, reciever, asset, note, method } = formValue;
-    console.log(formValue);
+
     getUsers().then((res) => {
       if (amount && asset && note && method) {
         let reciepien;
         if (method === "email") {
           for (let user in res) {
-            console.log(res[user].emailAddress);
             if (res[user].emailAddress === reciever) {
               reciepien = res[user];
               break;
@@ -39,7 +38,6 @@ function PaymentPage() {
           }
         } else if (method === "username") {
           for (let user in res) {
-            console.log(res[user].userName);
             if (res[user].userName === reciever) {
               reciepien = res[user];
               break;
@@ -47,7 +45,6 @@ function PaymentPage() {
           }
         } else if (method === "twitter") {
           for (let user in res) {
-            console.log(res[user].twitterHandle);
             if (res[user].twitterHandle === reciever) {
               reciepien = res[user];
               break;
@@ -55,22 +52,70 @@ function PaymentPage() {
           }
         } else {
           for (let user in res) {
-            console.log(res[user].walletAddress);
             if (res[user].walletAddress === reciever) {
               reciepien = res[user];
               break;
             }
           }
         }
-        alert(reciepien);
-        sendTrx(wallet, reciepien.walletAddress, amount, note).then((res) => {
-          alert(res);
-        });
+        if (reciepien) {
+          if (asset === "1") {
+            sendTrx(wallet, reciepien.walletAddress, amount, note)
+              .then((res) =>
+                Swal.fire({
+                  icon: "success",
+                  title: "Successful",
+                  text: "Social accounts linked successfully",
+                  // footer: '<a href="">Why do I have this issue?</a>',
+                })
+              )
+              .catch((err) => {
+                console.log(err);
+                Swal.fire({
+                  icon: "error",
+                  title: "Oops...",
+                  text: "Something went wrong!",
+                  // footer: '<a href="">Why do I have this issue?</a>',
+                });
+              });
+          } else {
+            let tokenDetails = supportedTokensMap().get(asset);
+            sendTRC(
+              tokenDetails.contractAddress,
+              reciepien.walletAddress,
+              amount * 10 ** tokenDetails.decimal,
+              note,
+              tokenDetails.name
+            )
+              .then((res) =>
+                Swal.fire({
+                  icon: "success",
+                  title: "Successful",
+                  text: "Social accounts linked successfully",
+                  // footer: '<a href="">Why do I have this issue?</a>',
+                })
+              )
+              .catch((err) => {
+                console.log(err);
+                Swal.fire({
+                  icon: "error",
+                  title: "Oops...",
+                  text: "Something went wrong!",
+                  // footer: '<a href="">Why do I have this issue?</a>',
+                });
+              });
+          }
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "No user with the provided username!",
+            // footer: '<a href="">Why do I have this issue?</a>',
+          });
+        }
       }
     });
-    console.log(reciever);
-    // const userMap=new Map()
-  }, [formValue, getUsers, sendTrx, wallet]);
+  }, [formValue, getUsers, sendTrx, wallet, sendTRC]);
   return (
     <div className="mt-10 md:mt-20 w-[95%] md:w-2/5 bg-slate-900 p-3 py-10 md:px-5 mx-auto">
       <div>
@@ -88,14 +133,13 @@ function PaymentPage() {
               value={formValue.method}
             >
               <option value={"username"}>Username</option>
-              <option value={"address"}>Address</option>
               <option value={"twitter"}>Twitter</option>
               <option value={"email"}>Email</option>
             </select>
           </div>
           <div className="mx-auto md:flex-1 items-center gap-5 justify-center flex-wrap ">
             <label className="text-white block " htmlFor="reciepient">
-              Address:
+              Username:
             </label>
             <Input
               onChange={(e) => changeHandler(e)}
@@ -129,18 +173,17 @@ function PaymentPage() {
               name="asset"
               value={formValue.asset}
             >
-              <option value={1}>TRX</option>
-              {/* {supportedTokens.map((item) => (
-                <option value={item.contractAddress}>
-                  {item.name.toUpperCase()}
-                </option>
-              ))} */}
+              <option value={"1"}>TRX</option>
+              {supportedTokens.map((item) => (
+                <option value={item.name}>{item.name.toUpperCase()}</option>
+              ))}
             </select>
           </div>
         </div>
-        Note:
         <div className="gap-5 mt-5 items-center md:px-10 flex-wrap md:gap-5">
-          <label className="text-white block" htmlFor="asset"></label>
+          <label className="text-white block" htmlFor="note">
+            Note
+          </label>
           <textarea
             onChange={(e) => changeHandler(e)}
             rows="3"

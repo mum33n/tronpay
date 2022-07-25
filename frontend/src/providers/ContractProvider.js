@@ -8,16 +8,6 @@ const contractProviderContext = createContext();
 
 function ContractProvider({ children }) {
   const { tronWeb, wallet } = useWalletValue();
-
-  //   const fullNode = "https://api.shasta.trongrid.io";
-  //   const solidityNode = "https://api.shasta.trongrid.io";
-  //   const eventServer = "https://api.shasta.trongrid.io";
-  //   const tronWeb = useMemo(
-  //     () => new tronweb(fullNode, solidityNode, eventServer),
-  //     []
-  //   );
-
-  // const contract = async () => await tronWeb?.contract().at(contractAddress);
   const addUser = useCallback(
     async (address, username, twitter, email, image) => {
       let contract1 = await tronWeb?.contract().at(contractAddress);
@@ -30,10 +20,8 @@ function ContractProvider({ children }) {
   );
   const getProfile = useCallback(
     async (address) => {
-      console.log(abi[0]);
       if (wallet) {
         const contract = await tronWeb?.contract(abi, contractAddress);
-        console.log(contract?.getUserMap().call());
         let profile = await contract?.getUser(wallet).call();
         return profile;
       } else {
@@ -47,24 +35,57 @@ function ContractProvider({ children }) {
     let profile = await contract?.getUserMap().call();
     return profile;
   }, [tronWeb]);
+  const getHistory = useCallback(async () => {
+    const contract = await tronWeb?.contract(abi, contractAddress);
+    let profile = await contract?.getTransactions().call();
+    let history = [];
+    if (profile.length !== 0) {
+      for (let i in profile) {
+        let base = tronWeb.address.toHex(wallet);
+        if (
+          profile[i].senderAddress === base ||
+          profile[i].ReceiverAddress === base
+        ) {
+          history.push(profile[i]);
+        }
+      }
+    }
+    return history;
+  }, [tronWeb, wallet]);
   const sendTrx = useCallback(
     async (sender, reciever, amount, note) => {
       const contract = await tronWeb?.contract(abi, contractAddress);
+      const tradeobj = await tronWeb.transactionBuilder.sendTrx(
+        reciever,
+        tronWeb.toSun(amount)
+      );
+      const signedtxn = await tronWeb.trx.sign(tradeobj);
+      await tronWeb.trx.sendRawTransaction(signedtxn);
       let tx = await contract
         ?.sendTRX(sender, reciever, amount, note, "TRX")
-        .send({
-          feeLimit: 500_000_000,
-          callValue: window.tronWeb.toSun(amount),
-          shouldPollResponse: false,
-          keepTxID: true,
-        });
+        .send();
+      return tx;
+    },
+    [tronWeb]
+  );
+  const sendTRC = useCallback(
+    async (asset, reciever, amount, note, tokenName) => {
+      const contract = await tronWeb?.contract(abi, contractAddress);
+      const contract1 = await tronWeb?.contract().at(asset);
+
+      await contract1
+        .approve("TQJBBsQF78Qeo4k36tdTPrhX7TbwPQ221D", amount)
+        .send();
+      let tx = await contract
+        ?.sendTRC(asset, reciever, amount, note, tokenName)
+        .send();
       return tx;
     },
     [tronWeb]
   );
   const values = useMemo(() => {
-    return { addUser, getProfile, getUsers, sendTrx };
-  }, [addUser, getProfile, getUsers, sendTrx]);
+    return { addUser, getProfile, getUsers, sendTrx, sendTRC, getHistory };
+  }, [addUser, getProfile, getUsers, sendTrx, sendTRC, getHistory]);
 
   return (
     <contractProviderContext.Provider value={values}>

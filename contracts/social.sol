@@ -3,13 +3,6 @@ pragma solidity ^0.8.0;
 import "./IERC20.sol";
 
 contract Trasaction {
-    //transfer events
-    // Function to receive Ether. msg.data must be empty
-    receive() external payable {}
-
-    // Fallback function is called when msg.data is not empty
-    fallback() external payable {}
-
     event Transfer(address from, address to, string note, uint256 timestamp);
 
     uint256 txnCounter;
@@ -27,7 +20,6 @@ contract Trasaction {
     //transaction object
     struct userTransaction {
         uint256 id;
-        string status;
         uint256 index;
         address senderAddress;
         address ReceiverAddress;
@@ -35,9 +27,7 @@ contract Trasaction {
         uint256 timestamp;
         string note;
         string asset;
-        string direction;
     }
-    userTransaction[] txArray;
 
     //user object
     struct userObject {
@@ -54,6 +44,11 @@ contract Trasaction {
 
     // //transactions
     userTransaction[] transactionsList;
+
+    //get transactions
+    function getTransactions() public view returns (userTransaction[] memory) {
+        return transactionsList;
+    }
 
     // adding user on connection with Email
     function addUser(
@@ -95,15 +90,13 @@ contract Trasaction {
         transactionsList.push(
             userTransaction(
                 txnCounter,
-                "pending",
                 index,
                 _senderAddress,
                 _ReceiverAddress,
                 _Amount,
                 block.timestamp,
                 _note,
-                asset,
-                "out"
+                asset
             )
         );
     }
@@ -132,6 +125,7 @@ contract Trasaction {
         emit Transfer(msg.sender, _receiver, note, block.timestamp);
     }
 
+    //direct sending
     function sendTRC(
         IERC20 token,
         address payable _receiver,
@@ -146,75 +140,5 @@ contract Trasaction {
         token.transferFrom(msg.sender, _receiver, _amount);
         addTxn(msg.sender, _receiver, _amount, note, asset);
         emit Transfer(msg.sender, _receiver, note, block.timestamp);
-    }
-
-    //claim fund
-    function claimTxn(
-        address payable reciever,
-        uint256 id,
-        uint256 amt
-    ) public payable {
-        if (
-            transactionsList[id].ReceiverAddress == msg.sender &&
-            keccak256(abi.encodePacked(transactionsList[id].status)) ==
-            keccak256(abi.encodePacked("pending"))
-        ) {
-            reciever.transfer(amt);
-            transactionsList[id].status = "completed";
-        }
-    }
-
-    function claimTRCTxn(
-        address payable reciever,
-        IERC20 token,
-        uint256 id,
-        uint256 amt
-    ) public payable {
-        if (
-            transactionsList[id].ReceiverAddress == msg.sender &&
-            keccak256(abi.encodePacked(transactionsList[id].status)) ==
-            keccak256(abi.encodePacked("pending"))
-        ) {
-            token.transfer(msg.sender, amt);
-            reciever.transfer(amt);
-            transactionsList[id].status = "completed";
-        }
-    }
-
-    function undoTxn(
-        address payable sender,
-        uint256 id,
-        uint256 amt
-    ) public payable {
-        require(
-            (transactionsList[id].senderAddress == msg.sender),
-            "Unathorized"
-        );
-        require(
-            (keccak256(abi.encodePacked(transactionsList[id].status)) ==
-                keccak256(abi.encodePacked("pending"))),
-            "Invalid Attempt"
-        );
-        sender.transfer(amt);
-        transactionsList[id].status = "revoked";
-    }
-
-    function undoTRCTxn(
-        address token,
-        uint256 id,
-        uint256 amt
-    ) public payable {
-        require(
-            (transactionsList[id].senderAddress == msg.sender),
-            "Unathorized"
-        );
-        require(
-            (keccak256(abi.encodePacked(transactionsList[id].status)) ==
-                keccak256(abi.encodePacked("pending"))),
-            "Invalid Attempt"
-        );
-        IERC20 tokenRC = IERC20(token);
-        tokenRC.transfer(msg.sender, amt);
-        transactionsList[id].status = "revoked";
     }
 }
