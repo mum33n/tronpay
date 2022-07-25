@@ -1,11 +1,5 @@
 import React, { useCallback, useState } from "react";
-import tron from "../assets/tron.png";
-import {
-  AiFillTwitterSquare,
-  AiOutlineCheckCircle,
-  AiOutlineClockCircle,
-  AiOutlineLink,
-} from "react-icons/ai";
+import { AiFillTwitterSquare, AiOutlineLink } from "react-icons/ai";
 import banner from "../assets/banner.png";
 // import loader from "../assets/Spinner.svg";
 import { useWalletValue } from "../providers/WalletProvider";

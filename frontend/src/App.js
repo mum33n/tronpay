@@ -6,7 +6,6 @@ import PaymentPage from "./pages/PaymentPage";
 import ProfilePage from "./pages/ProfilePage";
 import ProfileProvider from "./providers/ProfileProvider";
 import Home from "./pages/Home";
-import Typewriter from "typewriter-effect";
 import ContractProvider from "./providers/ContractProvider";
 
 function App() {
@@ -14,7 +13,7 @@ function App() {
     <WalletProvider>
       <ContractProvider>
         <ProfileProvider>
-          <div className="min-h-[100vh] w-[100vw] bg-slate-800">
+          <div className="min-h-[100vh] w-max-[100%] bg-slate-800">
             <Routes>
               <Route element={<AppContainer />}>
                 <Route path="/" element={<Home />} />

@@ -19,6 +19,9 @@ function AppContainer() {
       <div className="pb-10">
         <Outlet />
       </div>
+      <div className="text-white text-md py-5 text-md text-center">
+        Copyright &copy; 2022{" "}
+      </div>
     </div>
   );
 }

@@ -1,11 +1,9 @@
 import React from "react";
 import tron from "../assets/tron.png";
-import { AiOutlineCheckCircle, AiOutlineClockCircle } from "react-icons/ai";
 import { useWalletValue } from "../providers/WalletProvider";
 
 function Transaction({ data }) {
-  let { ReceiverAddress, senderAddress, Amount, note, timestamp, status } =
-    data;
+  let { ReceiverAddress, senderAddress, Amount, note, timestamp } = data;
   let { tronWeb, wallet } = useWalletValue();
   let reciever = tronWeb?.address.fromHex(ReceiverAddress);
   let sender = tronWeb?.address.fromHex(senderAddress);

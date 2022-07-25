@@ -28,7 +28,10 @@ function Navbar() {
         "bg-slate-900 items-center py-5 flex justify-between px-5 md:px-10 text-white"
       }
     >
-      <a href="/"> TRONPAY</a>
+      <a className="text-xl font-bold" href="/">
+        {" "}
+        TRONPAY
+      </a>
       <AiOutlineBars
         className="text-lg md:hidden "
         onClick={() => setToggle((prev) => !prev)}
