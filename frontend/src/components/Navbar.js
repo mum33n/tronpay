@@ -17,7 +17,6 @@ function Navbar() {
   const [toggle, setToggle] = useState(false);
   useEffect(() => {
     getProfile(wallet).then((res) => {
-      console.log(res);
       if (res.emailAddress !== "") {
         setProfile(res);
       }

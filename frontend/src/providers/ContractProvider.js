@@ -8,16 +8,6 @@ const contractProviderContext = createContext();
 
 function ContractProvider({ children }) {
   const { tronWeb, wallet } = useWalletValue();
-
-  //   const fullNode = "https://api.shasta.trongrid.io";
-  //   const solidityNode = "https://api.shasta.trongrid.io";
-  //   const eventServer = "https://api.shasta.trongrid.io";
-  //   const tronWeb = useMemo(
-  //     () => new tronweb(fullNode, solidityNode, eventServer),
-  //     []
-  //   );
-
-  // const contract = async () => await tronWeb?.contract().at(contractAddress);
   const addUser = useCallback(
     async (address, username, twitter, email, image) => {
       let contract1 = await tronWeb?.contract().at(contractAddress);
@@ -30,10 +20,8 @@ function ContractProvider({ children }) {
   );
   const getProfile = useCallback(
     async (address) => {
-      console.log(abi[0]);
       if (wallet) {
         const contract = await tronWeb?.contract(abi, contractAddress);
-        console.log(contract);
         let profile = await contract?.getUser(wallet).call();
         return profile;
       } else {
@@ -73,7 +61,6 @@ function ContractProvider({ children }) {
       );
       const signedtxn = await tronWeb.trx.sign(tradeobj);
       const receipt = await tronWeb.trx.sendRawTransaction(signedtxn);
-      console.log(receipt);
       let tx = await contract
         ?.sendTRX(sender, reciever, amount, note, "TRX")
         .send();
@@ -89,7 +76,6 @@ function ContractProvider({ children }) {
       let approve = await contract1
         .approve("TQJBBsQF78Qeo4k36tdTPrhX7TbwPQ221D", amount)
         .send();
-      console.log(approve);
       let tx = await contract
         ?.sendTRC(asset, reciever, amount, note, tokenName)
         .send();

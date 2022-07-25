@@ -9,7 +9,6 @@ import { supportedTokens, supportedTokensMap } from "../utils/support";
 function PaymentPage() {
   const { wallet, connectWallet } = useWalletValue();
   const { getUsers, sendTrx, sendTRC } = useContractValue();
-  console.log(supportedTokensMap());
   const [formValue, setForm] = useState({
     reciever: "",
     amount: "",
@@ -25,13 +24,12 @@ function PaymentPage() {
   }, []);
   const sendTxn = useCallback(() => {
     const { amount, reciever, asset, note, method } = formValue;
-    console.log(formValue);
+
     getUsers().then((res) => {
       if (amount && asset && note && method) {
         let reciepien;
         if (method === "email") {
           for (let user in res) {
-            console.log(res[user].emailAddress);
             if (res[user].emailAddress === reciever) {
               reciepien = res[user];
               break;
@@ -39,7 +37,6 @@ function PaymentPage() {
           }
         } else if (method === "username") {
           for (let user in res) {
-            console.log(res[user].userName);
             if (res[user].userName === reciever) {
               reciepien = res[user];
               break;
@@ -47,7 +44,6 @@ function PaymentPage() {
           }
         } else if (method === "twitter") {
           for (let user in res) {
-            console.log(res[user].twitterHandle);
             if (res[user].twitterHandle === reciever) {
               reciepien = res[user];
               break;
@@ -55,7 +51,6 @@ function PaymentPage() {
           }
         } else {
           for (let user in res) {
-            console.log(res[user].walletAddress);
             if (res[user].walletAddress === reciever) {
               reciepien = res[user];
               break;
@@ -81,9 +76,6 @@ function PaymentPage() {
         }
       }
     });
-    console.log(reciever);
-
-    // const userMap=new Map()
   }, [formValue, getUsers, sendTrx, wallet, sendTRC]);
   return (
     <div className="mt-10 md:mt-20 w-[95%] md:w-2/5 bg-slate-900 p-3 py-10 md:px-5 mx-auto">
