@@ -180,9 +180,10 @@ function PaymentPage() {
             </select>
           </div>
         </div>
-        Note:
         <div className="gap-5 mt-5 items-center md:px-10 flex-wrap md:gap-5">
-          <label className="text-white block" htmlFor="asset"></label>
+          <label className="text-white block" htmlFor="note">
+            Note
+          </label>
           <textarea
             onChange={(e) => changeHandler(e)}
             rows="3"
